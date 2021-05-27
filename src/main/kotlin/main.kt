@@ -45,19 +45,35 @@ import java.util.concurrent.ConcurrentHashMap
 }*/
 
 
-val pathString = arrayListOf<String>("src/main/resources/train","src/main/resources/test")
+fun indexCreating(
+    threadsNumber: Int,
+    size:Int,
+    index: InvertedIndex
+) {
+    val threadArray: Array<ThreadIndex?> = arrayOfNulls(threadsNumber)
+
+    for (i in 0 until threadsNumber) {
+        threadArray[i] = ThreadIndex(
+            if (i == threadsNumber - 1) size else size / threadsNumber * (i + 1),
+            (size / threadsNumber) * i,
+            index
+        )
+        threadArray[i]!!.start()
+    }
+
+    for (i in 0 until threadsNumber) {
+        threadArray[i]!!.join()
+    }
+}
+
 
 fun main(args: Array<String>) {
-    val trainFiles = File(pathString[0]).list()
-    val testFiles = File(pathString[1]).list()
+
     try {
         val idx = InvertedIndex()
-         for (p in trainFiles) {
-             idx.indexFile(pathString[0]+"/"+p)
-         }
-        for (p in testFiles) {
-            idx.indexFile(pathString[1]+"/"+p)
-        }
+        val size = File("src/main/resources/train").list().size +
+                File("src/main/resources/test").list().size
+        indexCreating(4,size,idx)
         println("Введите слово для поиска: ")
         idx.search(Arrays.asList(*readLine()!!.split(",").toTypedArray()))
     } catch (e: Exception) {
