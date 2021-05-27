@@ -36,9 +36,10 @@ class InvertedIndex {
         var pos = 0
         val reader = BufferedReader(FileReader(file))
         var line = reader.readLine()
+        val splitter = Regex("""\W+""")
         while (line != null) {
-            for (_word in line.split("\\W+").toTypedArray()) {
-                val word = _word.lowercase(Locale.getDefault())
+            for (_word in line.split(splitter).toTypedArray()) {
+                val word = _word.toLowerCase(Locale.getDefault())
                 pos++
                 if (stopwords.contains(word)) continue
                 var idx = index[word]
