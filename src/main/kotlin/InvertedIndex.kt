@@ -33,21 +33,27 @@ class InvertedIndex {
             files.add(file.path)
             fileNumber = files.size - 1
         }
+
         var pos = 0
         val reader = BufferedReader(FileReader(file))
         var line = reader.readLine()
         val splitter = Regex("""\W+""")
+
         while (line != null) {
             for (_word in line.split(splitter).toTypedArray()) {
-                val word = _word.toLowerCase(Locale.getDefault())
+                val word = _word.lowercase(Locale.getDefault())
                 pos++
-                if (stopwords.contains(word)) continue
+
+                if (stopwords.contains(word)) {
+                    continue
+                }
                 var idx = index[word]
+
                 if (idx == null) {
                     idx = LinkedList()
                     index[word] = idx
                 }
-                idx.add(Tuple(filePath,fileNumber,pos))
+                idx.add(Tuple(filePath, fileNumber, pos))
             }
             line = reader
                 .readLine()
@@ -60,12 +66,14 @@ class InvertedIndex {
             val answer: MutableSet<String> = HashSet()
             val word = _word.lowercase(Locale.getDefault())
             val idx: List<Tuple>? = index[word]
+
             if (idx != null) {
                 for (t in idx) {
                     answer.add(files[t.fileNumber])
                 }
             }
             print(word)
+
             for (f in answer) {
                 print(" $f")
             }

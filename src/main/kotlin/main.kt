@@ -50,11 +50,11 @@ import java.util.concurrent.ConcurrentHashMap
 fun main(args: Array<String>) {
     try {
         val idx = InvertedIndex()
-       /* for (i in 1 until args.size) {
-            idx.indexFile(File("src/main/resources/train/neg/0_3.txt"))
-        }*/
+        /* for (i in 1 until args.size) {
+             idx.indexFile(File("src/main/resources/train/neg/0_3.txt"))
+         }*/
         idx.indexFile(File("src/main/resources/0_3.txt"))
-        idx.search(Arrays.asList(*"who".split(",").toTypedArray()))
+        idx.search(Arrays.asList(*"Story".split(",").toTypedArray()))
     } catch (e: Exception) {
         e.printStackTrace()
     }
