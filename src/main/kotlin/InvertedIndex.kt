@@ -26,8 +26,8 @@ class InvertedIndex {
     var files: MutableList<String> = ArrayList()
 
     @Throws(IOException::class)
-    fun indexFile(file: File) {
-        var filePath = file.path
+    fun indexFile(filePath: String) {
+        var file: File = File(filePath)
         var fileNumber = files.indexOf(file.path)
         if (fileNumber == -1) {
             files.add(file.path)

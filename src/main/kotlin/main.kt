@@ -45,16 +45,21 @@ import java.util.concurrent.ConcurrentHashMap
 }*/
 
 
-
+val pathString = arrayListOf<String>("src/main/resources/train","src/main/resources/test")
 
 fun main(args: Array<String>) {
+    val trainFiles = File(pathString[0]).list()
+    val testFiles = File(pathString[1]).list()
     try {
         val idx = InvertedIndex()
-        /* for (i in 1 until args.size) {
-             idx.indexFile(File("src/main/resources/train/neg/0_3.txt"))
-         }*/
-        idx.indexFile(File("src/main/resources/0_3.txt"))
-        idx.search(Arrays.asList(*"Story".split(",").toTypedArray()))
+         for (p in trainFiles) {
+             idx.indexFile(pathString[0]+"/"+p)
+         }
+        for (p in testFiles) {
+            idx.indexFile(pathString[1]+"/"+p)
+        }
+        println("Введите слово для поиска: ")
+        idx.search(Arrays.asList(*readLine()!!.split(",").toTypedArray()))
     } catch (e: Exception) {
         e.printStackTrace()
     }
