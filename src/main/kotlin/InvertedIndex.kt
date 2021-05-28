@@ -61,7 +61,7 @@ class InvertedIndex {
         println("indexed " + file.path + " " + pos + " words")
     }
 
-    fun search(words: List<String>) : String {
+    fun search(words: List<String>): String {
         var res = ""
         for (_word in words) {
             val answer: MutableSet<String> = HashSet()
@@ -76,7 +76,7 @@ class InvertedIndex {
             res += word
 
             for (f in answer) {
-                res +=" $f"
+                res += " $f"
             }
         }
 

@@ -7,7 +7,7 @@ private var reader: BufferedReader? = null
 private var `in`: BufferedReader? = null
 private var out: BufferedWriter? = null
 
-fun main(args: Array<String>) {
+fun main() {
     try {
         try {
             // спроба підключення клієнта до сервера

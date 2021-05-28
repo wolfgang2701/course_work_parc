@@ -4,27 +4,27 @@ import java.util.*
 import kotlin.system.measureTimeMillis
 
 
-fun test( size:Int, index: InvertedIndex){
+fun test(size: Int, index: InvertedIndex) {
     val MAX_THREADS = 600
     var table = "1\t"
-    for(s in 1000..size step 250){
-        table += "${measureTimeMillis { indexCreating(1,s,index)}}\t"
+    for (s in 1000..size step 250) {
+        table += "${measureTimeMillis { indexCreating(1, s, index) }}\t"
     }
     table += "\n"
 
-    for(i in 2..MAX_THREADS step 10 ){
+    for (i in 2..MAX_THREADS step 10) {
         table += "$i\t"
-        for(s in 1000..size step 250){
-            table += "${measureTimeMillis { indexCreating(i,s,index) }}\t"
+        for (s in 1000..size step 250) {
+            table += "${measureTimeMillis { indexCreating(i, s, index) }}\t"
         }
         table += "\n"
     }
-   println(table)
+    println(table)
 }
 
 fun indexCreating(
     threadsNumber: Int,
-    size:Int,
+    size: Int,
     index: InvertedIndex
 ) {
     val threadArray: Array<ThreadIndex?> = arrayOfNulls(threadsNumber)
@@ -55,11 +55,8 @@ fun main(args: Array<String>) {
     try {
         val size = File("src/main/resources/train").list().size +
                 File("src/main/resources/test").list().size
-        indexCreating(20,size,idx)
+        indexCreating(20, size, idx)
 //        test(size,idx)
-       /*
-        idx.search(Arrays.asList(*readLine()!!.split(",").toTypedArray()))*/
-        println(idx.search(Arrays.asList(*"yellow".split(",").toTypedArray())))
     } catch (e: Exception) {
         e.printStackTrace()
     }
@@ -76,8 +73,6 @@ fun main(args: Array<String>) {
                 // створюю необхідні змінні для вводу/виводу інформації на клієнти через InputStream та OutputStream
                 in1 = BufferedReader(InputStreamReader(client1.getInputStream()))
                 out1 = BufferedWriter(OutputStreamWriter(client1.getOutputStream()))
-                /*out1!!.write("Welcome to the Chat! \n")
-                out1!!.flush()*/
 
                 val searchWords = in1!!.readLine()
                 println("Client 1: $searchWords")
@@ -86,8 +81,6 @@ fun main(args: Array<String>) {
 
                 out1!!.write(searchRes)
                 out1!!.flush()
-
-
             } finally {
                 // закриваю клієнт, Input/OutputStreams
                 client1.close()
