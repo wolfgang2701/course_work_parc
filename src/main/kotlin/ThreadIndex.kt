@@ -11,11 +11,12 @@ class ThreadIndex(private val endIndex: Int,
         val trainFiles = File(pathString[0]).list()
         val testFiles = File(pathString[1]).list()
 
+        val delta =  1500
         for (i in startIndex until endIndex){
-            if (endIndex < 1500){
+            if (i < delta){
                 index.indexFile(pathString[0]+"/"+trainFiles[i])
             } else {
-                index.indexFile(pathString[1]+"/"+testFiles[i])
+                index.indexFile(pathString[1]+"/"+testFiles[i - delta])//исправить i!!!
             }
 
         }

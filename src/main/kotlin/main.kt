@@ -8,14 +8,15 @@ import kotlin.system.measureTimeMillis
 
 
 fun test( size:Int, index: InvertedIndex){
-    val MAX_THREADS = 60
-    var table = ""
+    val MAX_THREADS = 200
+    var table = "1\t"
     for(s in 1000..size step 250){
         table += "${measureTimeMillis { indexCreating(1,s,index)}}\t"
     }
     table += "\n"
 
-    for(i in 2..MAX_THREADS step 2 ){
+    for(i in 2..MAX_THREADS step 4 ){
+        table += "$i\t"
         for(s in 1000..size step 250){
             table += "${measureTimeMillis { indexCreating(i,s,index) }}\t"
         }
