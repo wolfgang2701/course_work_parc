@@ -4,46 +4,25 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.system.measureTimeMillis
 
 
-/*internal class ThreadIndex(index: ConcurrentHashMap<String, MutableList<Tuple>>, startIndex: Int, endIndex: Int) :
-    Thread() {
-    private val fileNamesList: List<String> = ArrayList()
-    private val index = ConcurrentHashMap<String, MutableList<Tuple>>()
-    private val startIndex: Int
-    private val endIndex: Int
-    private val splitter = "\\W+"
-    private val fileNames: MutableList<String> = ArrayList()
-    override fun run() {
-        for (i in startIndex..endIndex) {
-            try {
-                indexFile(fileNamesList[i])
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
+fun test( size:Int, index: InvertedIndex){
+    val MAX_THREADS = 60
+    var table = ""
+    for(s in 1000..size step 250){
+        table += "${measureTimeMillis { indexCreating(1,s,index)}}\t"
     }
+    table += "\n"
 
-    @Throws(IOException::class)
-    private fun indexFile(fileName: String) {
-
-        fileNames.add(fileName)
-        val allLines = Files.readAllLines(Paths.get(fileName))
-        for (line in allLines) {
-            var posIndex = 0
-            for (word in line.toLowerCase().split(splitter).toTypedArray()) {
-                val locations = index.computeIfAbsent(
-                    word
-                ) { k: String? -> ArrayList() }
-                locations.add(Tuple(fileName, posIndex++))
-            }
+    for(i in 2..MAX_THREADS step 2 ){
+        for(s in 1000..size step 250){
+            table += "${measureTimeMillis { indexCreating(i,s,index) }}\t"
         }
-        println("$fileName has been indexed")
+        table += "\n"
     }
-
-
-}*/
-
+   println(table)
+}
 
 fun indexCreating(
     threadsNumber: Int,
@@ -73,9 +52,10 @@ fun main(args: Array<String>) {
         val idx = InvertedIndex()
         val size = File("src/main/resources/train").list().size +
                 File("src/main/resources/test").list().size
-        indexCreating(4,size,idx)
-        println("Введите слово для поиска: ")
-        idx.search(Arrays.asList(*readLine()!!.split(",").toTypedArray()))
+       /* indexCreating(4,size,idx)*/
+        test(size,idx)
+       /* println("Введите слово для поиска: ")
+        idx.search(Arrays.asList(*readLine()!!.split(",").toTypedArray()))*/
     } catch (e: Exception) {
         e.printStackTrace()
     }
