@@ -4,6 +4,9 @@ import java.util.*
 import kotlin.system.measureTimeMillis
 
 
+const val THREADS_NUMBER = 20
+private const val PORT = 7000
+
 fun test(size: Int, index: InvertedIndex) {
     val MAX_THREADS = 600
     var table = "1\t"
@@ -43,44 +46,48 @@ fun indexCreating(
     }
 }
 
-// необхідні змінні для роботи серверу
-private var server: ServerSocket? = null
-private var in1: BufferedReader? = null
-private var out1: BufferedWriter? = null
+fun handleClient(in1: BufferedReader?, out1: BufferedWriter?, idx: InvertedIndex) {
+    val searchWords = in1!!.readLine()
+    println("Client 1: $searchWords")
 
+    val searchRes = idx.search(Arrays.asList(*searchWords.split(",").toTypedArray()))
 
-fun main(args: Array<String>) {
+    out1!!.write(searchRes)
+    out1.flush()
+}
+
+fun main() {
     val idx = InvertedIndex()
 
     try {
         val size = File("src/main/resources/train").list().size +
                 File("src/main/resources/test").list().size
-        indexCreating(20, size, idx)
+        indexCreating(THREADS_NUMBER, size, idx)
 //        test(size,idx)
     } catch (e: Exception) {
         e.printStackTrace()
     }
 
+    // необхідні змінні для роботи серверу
+    var server: ServerSocket? = null
+    var in1: BufferedReader? = null
+    var out1: BufferedWriter? = null
+
     try {
         try {
             // прив'язую серверний сокет до порта
-            server = ServerSocket(7000)
+            server = ServerSocket(PORT)
             println("Server is started!")
             // прослуховую під'єднання першого клієнта до сокета
-            val client1 = server!!.accept()
+            val client1 = server.accept()
             println("Client connected!")
+
             try {
                 // створюю необхідні змінні для вводу/виводу інформації на клієнти через InputStream та OutputStream
                 in1 = BufferedReader(InputStreamReader(client1.getInputStream()))
                 out1 = BufferedWriter(OutputStreamWriter(client1.getOutputStream()))
 
-                val searchWords = in1!!.readLine()
-                println("Client 1: $searchWords")
-
-                val searchRes = idx.search(Arrays.asList(*searchWords.split(",").toTypedArray()))
-
-                out1!!.write(searchRes)
-                out1!!.flush()
+                handleClient(in1, out1, idx)
             } finally {
                 // закриваю клієнт, Input/OutputStreams
                 client1.close()
